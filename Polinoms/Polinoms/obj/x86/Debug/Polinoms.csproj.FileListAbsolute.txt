@@ -1,0 +1,15 @@
+E:\C#\Polinoms\Polinoms\bin\Debug\Polinoms.exe
+E:\C#\Polinoms\Polinoms\bin\Debug\Polinoms.pdb
+E:\C#\Polinoms\Polinoms\obj\x86\Debug\Polinoms.Form1.resources
+E:\C#\Polinoms\Polinoms\obj\x86\Debug\Polinoms.Properties.Resources.resources
+E:\C#\Polinoms\Polinoms\obj\x86\Debug\Polinoms.csproj.GenerateResource.Cache
+E:\C#\Polinoms\Polinoms\obj\x86\Debug\Polinoms.exe
+E:\C#\Polinoms\Polinoms\obj\x86\Debug\Polinoms.pdb
+E:\Polinoms\Polinoms\obj\x86\Debug\Polinoms.exe
+E:\Polinoms\Polinoms\obj\x86\Debug\Polinoms.pdb
+E:\Polinoms\Polinoms\obj\x86\Debug\Polinoms.Properties.Resources.resources
+E:\Polinoms\Polinoms\obj\x86\Debug\Polinoms.csproj.GenerateResource.Cache
+E:\Polinoms\Polinoms\bin\Debug\Polinoms.exe
+E:\Polinoms\Polinoms\bin\Debug\Polinoms.pdb
+E:\Polinoms\Polinoms\obj\x86\Debug\Polinoms.csprojResolveAssemblyReference.cache
+E:\Polinoms\Polinoms\obj\x86\Debug\Polinoms.Form1.resources

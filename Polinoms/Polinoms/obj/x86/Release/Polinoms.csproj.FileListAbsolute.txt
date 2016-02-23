@@ -1,0 +1,15 @@
+C:\Users\Dioxs\AppData\Local\Temporary Projects\Polinoms\bin\Release\Polinoms.exe
+C:\Users\Dioxs\AppData\Local\Temporary Projects\Polinoms\bin\Release\Polinoms.pdb
+C:\Users\Dioxs\AppData\Local\Temporary Projects\Polinoms\obj\x86\Release\Polinoms.Form1.resources
+C:\Users\Dioxs\AppData\Local\Temporary Projects\Polinoms\obj\x86\Release\Polinoms.Properties.Resources.resources
+C:\Users\Dioxs\AppData\Local\Temporary Projects\Polinoms\obj\x86\Release\Polinoms.csproj.GenerateResource.Cache
+C:\Users\Dioxs\AppData\Local\Temporary Projects\Polinoms\obj\x86\Release\Polinoms.exe
+C:\Users\Dioxs\AppData\Local\Temporary Projects\Polinoms\obj\x86\Release\Polinoms.pdb
+E:\C#\Polinoms\Polinoms\obj\x86\Release\Polinoms.exe
+E:\C#\Polinoms\Polinoms\obj\x86\Release\Polinoms.pdb
+E:\C#\Polinoms\Polinoms\bin\Release\Polinoms.exe
+E:\C#\Polinoms\Polinoms\bin\Release\Polinoms.pdb
+E:\C#\Polinoms\Polinoms\obj\x86\Release\Polinoms.Form1.resources
+E:\C#\Polinoms\Polinoms\obj\x86\Release\Polinoms.Properties.Resources.resources
+E:\C#\Polinoms\Polinoms\obj\x86\Release\Polinoms.csproj.GenerateResource.Cache
+E:\C#\Polinoms\Polinoms\obj\x86\Release\Polinoms.csprojResolveAssemblyReference.cache
