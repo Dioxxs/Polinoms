@@ -310,8 +310,9 @@ namespace Polinoms
 
                 for (; ;)
                 {
-                    t = pols[2] * pols[1] % pols[0];
-                    pol = cpolinom.Bit_Level(pols[2], pols[1], pols[0]);
+                    int k = 2;
+                    t = pols[2] * pols[2] % pols[0];
+                    pol = (cpolinom.Bit_Level_Squaring(pols[2], pols[0], k) * (new cpolinom(k, pols[0].mod))) % pols[0];
                     
                     if(pol.isEqual(t) == false)
                         listBox3.Items.Add("(" + pols[2] + ").Inv(" + pols[1] + ")");

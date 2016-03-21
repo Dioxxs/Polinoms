@@ -1017,25 +1017,26 @@ namespace Polinoms
 
         # region Gordienko
 
-
         private static cpolinom CountMnojPolinim(cpolinom a, int tmp)
         {
-            for (int i = 0; i < a.x.Count; i++)
-                a.x[i] *= tmp;
+            cpolinom t = cpolinom.Copy(a);
 
-            return a;
+            for (int i = 0; i < t.Count; i++)
+                t[i] *= tmp % t.mod;
+
+            return t;
         }
 
         private static cpolinom CountDilPolinim(cpolinom a, int tmp)
         {
             for (int i = 0; i < a.x.Count; i++)
-                if (tmp != 0)
+                if (tmp != 0 && a.x[i] != 0)
                     a.x[i] /= tmp;
 
             return a;
         }
 
-        public static cpolinom Bit_Level(cpolinom a, cpolinom b, cpolinom n)
+        public static cpolinom Bit_Level(cpolinom a, cpolinom b, cpolinom n, int k)
         {
             /*
                 Bit-Level Algorithm for Montgomery Multiplication
@@ -1048,23 +1049,35 @@ namespace Polinoms
                 Step 5. c(x) := c(x)/x
              */
 
-            cpolinom c = new cpolinom("", Math.Max(a.x.Count, b.x.Count));
+            cpolinom c = new cpolinom("0", a.mod);
+            cpolinom x = new cpolinom("1 0", a.mod);
+            cpolinom t = new cpolinom("1", a.mod);
+            int f = 0;
 
-            // Step 1
-            for (int i = 0; i < Math.Max(a.x.Count, b.x.Count); i++)
-                c.Add(0);
             // Step 2,3,4,5
-            for (int i = 0; i < c.x.Count - 1; i++)
+            for (int i = a.Count - 1; i > -1; i--)
             {
-                c = c + CountMnojPolinim(b, a.x[i]);
-                c = c + CountMnojPolinim(n, c.x[0]);
-                c = CountDilPolinim(c, c.x[i]);
+                if (f < k)
+                {
+                    c = c + CountMnojPolinim(b, a[i]);
+                    while (c[c.Count - 1] != 0)
+                        c = c + n;
+
+                    Fix(n);
+                    c = c / x;
+                    f++;
+                }
+                else
+                {
+                    c = (c + (CountMnojPolinim(b, a[i]) * t)) % n;
+                    t = t * x;
+                }
             }
 
             return c;
         }
 
-        public static cpolinom Bit_Level_Squaring(cpolinom a, cpolinom n)
+        public static cpolinom Bit_Level_Squaring(cpolinom a, cpolinom n, int k)
         {
             /*
                 Input: a(x), n(x)
@@ -1075,22 +1088,31 @@ namespace Polinoms
                 Step 4. c(x) := c(x)/x
              */
 
-            cpolinom c = new cpolinom("", Math.Max(a.x.Count, n.x.Count));
+            cpolinom c = new cpolinom("", a.mod);
+            cpolinom x = new cpolinom("1 0", a.mod);
 
-            for (int i = 0; i < Math.Max(a.x.Count, n.x.Count); i++)
-                c.Add(Convert.ToInt32(a.x[i] * Math.Pow(c.x[i], 2 * i)));
+
+            for (int i = 0; i < a.Count ; i++)
+            {
+                c.Add(a[i]);
+                c.Add(0);
+            }
+            c.RemoveAt(c.Count - 1);
 
             // Step 1,2,3,4
-            for (int i = 0; i < c.x.Count - 1; i++)
+            for (int i = 0; i < k; i++)
             {
-                c = c + CountMnojPolinim(n, c.x[0]);
-                c = CountDilPolinim(c, c.x[i]);
+                while (c[c.Count - 1] != 0)
+                    c = c + n;
+
+                Fix(n);
+                c = c / x;
             }
 
             return c;
         }
 
-        public static int Inversion_Algorithm(cpolinom a)
+        public cpolinom Inversion_Algorithm(cpolinom n)
         {
             /*
                 Step 1. N0(x) := 1
@@ -1099,24 +1121,17 @@ namespace Polinoms
                 Step 4. if t(x) = 1 then N0(x) := N0(x) + xi−1
             */
 
-            cpolinom c = new cpolinom("", a.x.Count);
-            int w = 0, N_zero = 1, N = 0, max = a.x[0];
+            cpolinom N0 = new cpolinom("1", this.mod);
+            cpolinom t = new cpolinom("0", this.mod);
 
             // N0, w
-            for (int i = 0; i < a.x.Count; i++)
-                if (a.x[i] <= max)
-                    N = a.x[i];
-
-            w = a.x.Count - 1;
-            // Step 1,2,3,4
-            for (int i = 2; i < w; i++)
+            while(t.isOne() == false)
             {
-                c.Add(Convert.ToInt32(N * (N_zero % w)));
-                if (c.x[i] != 1)
-                    N_zero = Convert.ToInt32(N_zero + Math.Pow(a.x[i], i - 1));
+                t = this * N0 % n;
+                N0 = N0 + n;
             }
 
-            return N_zero;
+            return N0;
         }
 
         public static cpolinom Word_Level(cpolinom a, cpolinom b, cpolinom n, int N_zero)
@@ -1133,12 +1148,12 @@ namespace Polinoms
             cpolinom c = new cpolinom("", a.x.Count);
             int m = 0;
             // Step 2,3,4,5,6
-            for (int i = 0; i < Convert.ToInt32(a.x.Count / (a.x.Count - 1)); i++)
+            for (int i = 0; i < a.Count - 1; i++)
             {
-                c = c + CountMnojPolinim(b, a.x[i]);
-                m = Convert.ToInt32((c.x[0] * N_zero) % Math.Pow(c.x[0], a.x.Count - 1));
+                c = c + CountMnojPolinim(b, a[i]);
+                m = Convert.ToInt32((c[0] * N_zero) % Math.Pow(c[0], a.Count - 1));
                 c = c + CountMnojPolinim(n, m);
-                c = CountDilPolinim(c, Convert.ToInt32(Math.Pow(c.x[0], a.x.Count - 1)));
+                c = CountDilPolinim(c, Convert.ToInt32(Math.Pow(c[0], a.Count - 1)));
             }
 
             return c;
@@ -1153,23 +1168,29 @@ namespace Polinoms
                 Step 4. c(x) := c(x) + M(x)n(x)
                 Step 5. c(x) := c(x)/xw
              */
-            cpolinom c = new cpolinom("", a.x.Count);
+            cpolinom c = new cpolinom("", a.mod);
 
             // Step 1
             for (int i = 0; i < a.x.Count; i++)
             {
                 int Element = 0;
-                for (int j = 0; j < a.Count - 1; j++)
-                    Element += Convert.ToInt32(a.x[i] * Math.Pow(a.x[i], 2 * i));
+                for (int j = 0; j < a.Count; j++)
+                    Element += Convert.ToInt32(a[i] * Math.Pow(a[i], 2 * i));
 
                 c.Add(Element);
             }
             // Step 2,3,4,5
-            for (int i = 0; i < Convert.ToInt32(a.x.Count / (a.x.Count - 1)); i++)
+            for (int i = 0; i < Convert.ToInt32(a.Count / (a.Count - 1)); i++)
             {
-                int m = Convert.ToInt32(c.x[i] * N_zero % Math.Pow(c.x[0], a.x.Count - 1));
+                int m = c.x[i] * N_zero;
+                if (Math.Pow(c[0], a.Count - 1) != 0 && c[i] * N_zero != 0)
+                    m = Convert.ToInt32(c[i] * N_zero % Math.Pow(c[0], a.Count - 1));
+
                 c = c + CountMnojPolinim(n, m);
-                c = CountDilPolinim(c, Convert.ToInt32(a.x.Count - 1));
+                c = CountDilPolinim(c, Convert.ToInt32(a.Count - 1));
+
+                if (i < Convert.ToInt32(a.Count / (a.Count - 1)))
+                    break;
             }
 
             return c;
